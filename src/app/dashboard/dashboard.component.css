@@ -1,0 +1,13 @@
+.header{
+   height: 80px;
+   width: 100%; 
+ border-bottom: rgb(218,220,224) 1px solid;
+
+}
+.heading{
+    text-align: center;
+    color: blue;
+    font-weight: bolder;
+    padding-top: 20px;
+    font-size: 30px;
+}

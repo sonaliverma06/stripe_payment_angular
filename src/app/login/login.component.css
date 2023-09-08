@@ -1,0 +1,31 @@
+.form1{
+    height: 500px;
+    background-color: lavender;
+    width: 500px;
+    margin: auto;
+    margin-top: 50px;
+    display: grid;
+}
+.heading{
+    text-align: center;
+    justify-items: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+.formlabel{
+ font-size: larger;
+ margin-left: 40px;
+
+}
+.forminput{
+     width: 80%;
+     margin-left: 40px;
+     height: 30px;
+     background-color: aliceblue;
+}
+.button1{
+    height: 30px;
+    width: 60px;
+    margin-left: 200px;
+}
