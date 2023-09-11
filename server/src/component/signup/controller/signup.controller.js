@@ -127,7 +127,10 @@ exports.price = async (req, res) => {};
 
 exports.checkout = async (req, res) => {
   console.log("req", req.body.data);
-  const customer = req.body.data.customer_id;
+
+  //
+    try {
+       const customer = req.body.data.customer_id;
   const email = req.body.data.email;
   const price = req.body.data.price;
   const session = await stripe.checkout.sessions.create({
@@ -149,7 +152,39 @@ exports.checkout = async (req, res) => {
     success_url: `${process.env.FRONT_END_URL}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${process.env.FRONT_END_URL}/subscription`,
   });
-  return session;
+    // console.log("subscription", subscription);
+    console.log("session",session);
+    const findUser = await RgisterModel.findOne({
+      where: { email: session.customer_details.email },
+    });
+    if(findUser !== null){
+      const findSub = await SubModel.findOne({ where:{session_id: session.id} });
+      if(findSub===null){
+        const subUserEntry = await SubModel.create({
+          customer_id: session.customer,
+          invoice_id: "",
+          subscription_id: "",
+          subscription_created: `${session.created}`,
+          subscription_expire: `${session.expires_at}`,
+          session_id: session.id,
+          signup_id: findUser.dataValues.id,
+          payment_status:session.payment_status
+        });
+         return session;
+      }else{
+         return session;
+      }
+
+    }
+    else{
+      return {message:"no user found"}
+    }
+  } catch (error) {
+
+    console.error(error);
+    return { error: "Subscription not found" };
+      }
+
 };
 
 exports.profileDetails = async (req, res) => {
@@ -195,18 +230,30 @@ exports.subscriptionRetrive = async (req, res) => {
           subscription_expire: `${subscription.expires_at}`,
           session_id: subscription.id,
           signup_id: findUser.dataValues.id,
+          payment_status:subscription.payment_status
         });
         return { subUserEntry, subscription };
       }else{
+        console.log("subscription",subscription);
+       await SubModel.update({
+          customer_id: subscription.customer,
+          invoice_id: subscription.invoice,
+          subscription_id: subscription.subscription,
+          subscription_created: `${subscription.created}`,
+          subscription_expire: `${subscription.expires_at}`,
+          session_id: subscription.id,
+          signup_id: findUser.dataValues.id,
+          payment_status:subscription.payment_status
+        },{where:{session_id:subscriptionId}});
         return { findSub, subscription };
       }
-      
+
     }
     else{
       return {message:"no user found"}
     }
   } catch (error) {
-   
+
     console.error(error);
     return { error: "Subscription not found" };
       }
