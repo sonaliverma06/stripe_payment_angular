@@ -36,7 +36,7 @@ const SubModel = connection.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: RgisterModel,
+        model: "signup",
         key: "id",
       },
     },
@@ -44,6 +44,10 @@ const SubModel = connection.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    payment_status:{
+       type: DataTypes.STRING,
+      allowNull: false,
+    }
   },
   {
     tableName: "subscription",

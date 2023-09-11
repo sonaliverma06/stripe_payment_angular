@@ -1,16 +1,11 @@
 import { Injectable, inject } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivateFn,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { AppService } from './app.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn:"root"
 })
-class AuthGuard {
+class SubAuthGuard {
   constructor(private router: Router, private appService: AppService) {}
   private getValueFromObservable(): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -47,12 +42,12 @@ class AuthGuard {
             const date2 =new Date()
             console.log('dat1', date2 < data1);
             if (date2 < data1){
-              //  this.router.navigate(['/dashboard']);
-              return true;
+               this.router.navigate(['/dashboard']);
+              return false;
             }
             else{
               // this.router.navigate(['/stripe']);
-              return false;
+              return true;
             }
           }
           else{
@@ -66,6 +61,7 @@ class AuthGuard {
     }
   }
 }
-export const authGuard: CanActivateFn = (route, state) => {
-  return inject(AuthGuard).canActivate(route, state);
+
+export const subscriptionGuard: CanActivateFn = (route, state) => {
+  return inject(SubAuthGuard).canActivate(route,state);
 };
