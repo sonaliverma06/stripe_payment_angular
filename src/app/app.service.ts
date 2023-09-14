@@ -22,7 +22,6 @@ export class AppService {
       .get(`http://localhost:4800/api/${id}`)
       .pipe(catchError(this.HandleError));
   }
- 
 
   public add(data: any): Observable<any> {
     return this.http
@@ -74,6 +73,29 @@ export class AppService {
         'http://localhost:4800/api/sub-retrieve',
         { data: { id: id } },
         { headers: headers }
+      )
+      .pipe(catchError(this.HandleError));
+  }
+
+   public getDetails(): Observable<any> {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${localStorage.getItem('token')}`
+    );
+    return this.http
+      .post(
+        'http://localhost:4800/api/get-details',
+        {},
+        { headers: headers }
+      )
+      .pipe(catchError(this.HandleError));
+  }
+
+  public getSubDetails(subid:any): Observable<any> {
+    return this.http
+      .post(
+        `http://localhost:4800/api/stripe-product1/${subid}`,
+        {},
       )
       .pipe(catchError(this.HandleError));
   }

@@ -16,21 +16,19 @@ export class SignupComponent {
   ) {}
   registerform!: FormGroup;
 
-
-   ngOnInit() {
-     this.registerform = new FormGroup({
-       name: new FormControl(''),
-       email: new FormControl(''),
-       password: new FormControl(''),
-       address: new FormControl(''),
-       contect: new FormControl(''),
-     });
-
-   }
+  ngOnInit() {
+    this.registerform = new FormGroup({
+      name: new FormControl(''),
+      email: new FormControl(''),
+      password: new FormControl(''),
+      address: new FormControl(''),
+      contect: new FormControl(''),
+    });
+  }
 
   onSubmit() {
     if (this.registerform.valid) {
-      const user = this.registerform.value; 
+      const user = this.registerform.value;
 
       console.log('user', user);
 

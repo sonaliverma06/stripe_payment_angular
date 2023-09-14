@@ -222,12 +222,15 @@ exports.subscriptionRetrive = async (req, res) => {
     if(findUser !== null){
       const findSub = await SubModel.findOne({ where:{session_id: subscriptionId} });
       if(findSub===null){
+         const subs = await stripe.subscriptions.retrieve(
+      subscription.subscription
+    );
         const subUserEntry = await SubModel.create({
           customer_id: subscription.customer,
           invoice_id: subscription.invoice,
           subscription_id: subscription.subscription,
-          subscription_created: `${subscription.created}`,
-          subscription_expire: `${subscription.expires_at}`,
+         subscription_created: `${subs.current_period_start}`,
+          subscription_expire: `${subs.current_period_end}`,
           session_id: subscription.id,
           signup_id: findUser.dataValues.id,
           payment_status:subscription.payment_status
@@ -235,15 +238,19 @@ exports.subscriptionRetrive = async (req, res) => {
         return { subUserEntry, subscription };
       }else{
         console.log("subscription",subscription);
+        const subs = await stripe.subscriptions.retrieve(
+      subscription.subscription
+    );
        await SubModel.update({
           customer_id: subscription.customer,
           invoice_id: subscription.invoice,
           subscription_id: subscription.subscription,
-          subscription_created: `${subscription.created}`,
-          subscription_expire: `${subscription.expires_at}`,
+          subscription_created: `${subs.current_period_start}`,
+          subscription_expire: `${subs.current_period_end}`,
           session_id: subscription.id,
           signup_id: findUser.dataValues.id,
           payment_status:subscription.payment_status
+          
         },{where:{session_id:subscriptionId}});
         return { findSub, subscription };
       }
@@ -258,3 +265,10 @@ exports.subscriptionRetrive = async (req, res) => {
     return { error: "Subscription not found" };
       }
 };
+
+exports.getSubs = async(req,res) => {
+const subscription = await stripe.subscriptions.retrieve(
+      req.params.id
+    );
+    return subscription
+}

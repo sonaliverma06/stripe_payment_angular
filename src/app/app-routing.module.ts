@@ -7,12 +7,15 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { authGuard } from './auth.guard';
 import { subscriptionGuard } from './subscription.guard';
 
-
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: '', component: SignupComponent },
-  { path: 'stripe', component: StripCardComponent,canActivate:[subscriptionGuard] },
+  {
+    path: 'stripe',
+    component: StripCardComponent,
+    canActivate: [subscriptionGuard],
+  },
   {
     path: 'dashboard',
     component: DashboardComponent,

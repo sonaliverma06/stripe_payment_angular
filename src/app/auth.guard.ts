@@ -28,6 +28,23 @@ class AuthGuard {
       });
     });
   }
+
+  private getValueForSub(id: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const subscription = this.appService.getSubDetails(id).subscribe({
+        next: (res: any) => {
+          // console.log('resggggggggggg', res);
+
+          subscription.unsubscribe();
+          resolve(res.res);
+        },
+        error: (err: any) => {
+          subscription.unsubscribe();
+          resolve({});
+        },
+      });
+    });
+  }
   public async canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -38,28 +55,38 @@ class AuthGuard {
         (a: any, b: any) =>
           Number(b.subscription_expire) - Number(a.subscription_expire)
       );
-      console.log('subscription1', subscription1);
-          if (Array.isArray(subscription1)) {
-            console.log('subscription1', subscription1[0].subscription_expire);
-            const data1 = new Date(
-              Number(subscription1[0].subscription_expire) *1000
-            );
-            const date2 =new Date()
+      if (Array.isArray(subscription1)) {
+        console.log('subscription1', subscription1[0].subscription_expire);
+        if (subscription1.length > 0){
+           const getSubsp = await this.getValueForSub(
+             subscription1[0].subscription_id
+           );
+           if (Object.keys(getSubsp).length > 0) {
+            const data1 = new Date(Number(getSubsp.current_period_end) * 1000);
+            const date2 = new Date();
             console.log('dat1', date2 < data1);
-            if (date2 < data1){
+            if (date2 < data1) {
               //  this.router.navigate(['/dashboard']);
               return true;
-            }
-            else{
-              // this.router.navigate(['/stripe']);
+            } else {
+              this.router.navigate(['/stripe']);
               return false;
             }
-          }
-          else{
+           }else{
             this.router.navigate(['/stripe']);
-            return false
-          }
+            return false;
+           }
 
+        }
+        else{
+           this.router.navigate(['/stripe']);
+           return false;
+        }
+
+      } else {
+        this.router.navigate(['/stripe']);
+        return false;
+      }
     } else {
       this.router.navigate(['/login']);
       return false;

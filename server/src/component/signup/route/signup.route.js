@@ -1,4 +1,4 @@
-const { async } = require("rxjs");
+// const { async } = require("rxjs");
 const RegisterController = require("../controller/signup.controller");
 const express = require("express");
 const RegisterRouter = express.Router();
@@ -96,20 +96,20 @@ RegisterRouter.get("/stripe-product", async (req, res) => {
       return res.send(error.message);
     });
 });
-// RegisterRouter.get("/stripe-product", async (req, res) => {
-//   const id = req.params.id;
-//   await RegisterController.product(req, res)
-//     .then((res1) => {
-//       return res.status(201).json({
-//         status: true,
-//         res: res1,
-//       });
-//     })
-//     .catch((error) => {
-//       console.log("error", error);
-//       return res.send(error.message);
-//     });
-// });
+RegisterRouter.post("/stripe-product1/:id", async (req, res) => {
+  const id = req.params.id;
+  await RegisterController.getSubs(req, res)
+    .then((res1) => {
+      return res.status(201).json({
+        status: true,
+        res: res1,
+      });
+    })
+    .catch((error) => {
+      console.log("error", error);
+      return res.send(error.message);
+    });
+});
 
 // RegisterRouter.get("/stripe-price", async (req, res) => {
 //   const id = req.params.id;

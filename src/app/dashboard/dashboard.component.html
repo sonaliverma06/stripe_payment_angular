@@ -1,5 +1,22 @@
 <div class="container">
     <div class="header">
         <div class="heading">Deshboard</div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>subid</th>
+              <th>userid</th>
+              <th>action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of getDetailsData">
+              <td>{{data.subscription_id}}</td>
+              <td>{{data.signup_id}}</td>
+              <td><button type="button" [disabled]="data.disable" (click)="getSubs(data)">refund</button></td>
+            </tr>
+          </tbody>
+        </table>
     </div>
 </div>

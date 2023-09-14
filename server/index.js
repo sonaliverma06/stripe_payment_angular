@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const cors = require("cors");
 const { connection } = require("./src/connection/connection");
 const UserRouter = require("./src/component/signup/route/signup.route");
+const subRouter = require("./src/component/subscription/route/subscription.route");
 require("dotenv").config();
 // const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 4800;
 app.use("/api", UserRouter);
+app.use('/api',subRouter)
 connection
   .sync()
   .then(() => {
